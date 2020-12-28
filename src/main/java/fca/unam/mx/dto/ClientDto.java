@@ -35,9 +35,9 @@ public class ClientDto {
         this.last_name = last_name;
     }
 
-    @ColumnName("second_last_name")
+    @ColumnName("apellido_materno")
     public String getSecond_last_name() {
-        return this.second_last_name;
+        return second_last_name;
     }
 
     public void setSecond_last_name(String second_last_name) {
