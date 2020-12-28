@@ -1,158 +1,30 @@
 # Unidad 5 actividad complementaria
-### 1) Instalación de Java y Maven
-En Windows 10 deberás instalar Java 15 y Maven
 
-Java
-
-https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_windows-x64_bin.zip
-
-Maven
-
-https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
-
-Deberás descomprimir cada archivo en una ubicación de tu elección y crear 
-las variables de ambiente JAVA_HOME y MAVEN_HOME como se muestra en estas imágenes.
-Las rutas deberán ser modificadas a tu entorno.
-
-![JAVA_HOME](./images/java_1.png "JAVA_HOME")
-
-![MAVEN_HOME](./images/maven_1.png "MAVEN_HOME")
-
-Se deberá modificar la variable path y agregar las rutas %JAVA_HOME%/bin y %MAVEN_HOME%/bin
-
-![PATH](./images/path.png "PATH")
-
-Para comprobar que se ha realizado correctamente la instalación, en una consola de PowerShell o Terminal,
-teclear
-```
-java -version
-```
-y
-```
-mvn --version
-```
-
-La salida de cada comando deberá ser similar a la siguiente imagen
-![CONSOLA](./images/consola.png "CONSOLA")
-
-### 2) Descarga del proyecto
-
-Deberás descarga el proyecto en zip de https://github.com/tiempor3al/proyecto-api, y descomprimirlo  en la ubicación de tu elección.
-
-![DESCARGA](./images/descarga.png "DESCARGA")
-  
-### 3) Modificación de las credenciales de la base de datos
-
-Para que el proyecto se conecte a la base de datos que tienen instalada en su equipo, deberán modificar el archivo application.properties 
-que se encuentra en /src/main/resources con los datos correspondientes a su base de datos:
-
-```
-quarkus.datasource.username = fca
-quarkus.datasource.password = fca01
-quarkus.datasource.jdbc.url = jdbc:mysql://192.168.1.112:33700/fca
-```
-
-Para la url, la sintaxis es
-```
-jdbc:mysql://<dirección_ip>:<puerto>/<nombre_de_la_base>
-```
-Por ejemplo para conectarse a la base de datos "prueba" en localhost, la sintáxis 
-de la url será:
-```
-jdbc:mysql://localhost:3306/prueba
-```
-Nota: el puerto 3306 es el estándar para MariaDB / MySQL
-
-### 4) Compilación del proyecto
-
-En PowerShell o Terminal, navegar al directorio donde se descargó el proyecto y ejecutar el comando:
-
-```
-./mvnw.cmd quarkus:dev
-```
-
-Este comando descargará las librerías requeridas para el proyecto, y ejecutará la aplicación Web en modo "desarrollo" en el puerto 8090.
-
-![EJECUCION](./images/ejecucion.png "EJECUCION")
-
-El modo "desarrollo" habilita la opción "hot reload". Es decir, se pueden modificar los archivos y se recompilaran mientras se ejecuta la aplicación.
-
-### 5) Actividades
-
-a) Ejecutar la aplicación y navegar a http://localhost:8090 en el navegador de tu elección.
-
-![INDEX](./images/index.png "INDEX")
-
-b) Navegar al explorador de Swagger integrado, con http://localhost:8090/docs
-
-![SWAGGER](./images/swagger.png "SWAGGER")
-
+--a) Investiga que es un API y qué es un microservicio.
+Una API es un conjunto de definiciones y protocolos que se utiliza para desarrollar e integrar el software de las aplicaciones. API significa interfaz de programación de aplicaciones. Las API permiten que sus productos y servicios se comuniquen con otros, sin necesidad de saber cómo están implementados. Esto simplifica el desarrollo de las aplicaciones y permite ahorrar tiempo y dinero. Las API le otorgan flexibilidad; simplifican el diseño, la administración y el uso de las aplicaciones, y proporcionan oportunidades de innovación, lo cual es ideal al momento de diseñar herramientas y productos nuevos.
+Los microservicios son tanto un estilo de arquitectura como un modo de programar software. Con los microservicios, las aplicaciones se dividen en sus elementos más pequeños e independientes entre sí. A diferencia del enfoque tradicional y monolítico de las aplicaciones, en el que todo se compila en una sola pieza, los microservicios son elementos independientes que funcionan en conjunto para llevar a cabo las mismas tareas. Cada uno de esos elementos o procesos es un microservicio. Este enfoque de desarrollo de software valora el nivel de detalle, la sencillez y la capacidad para compartir un proceso similar en varias aplicaciones. Es un elemento fundamental de la optimización del desarrollo de aplicaciones hacia un modelo nativo de la nube.
+--b) Investiga que es Swagger. ¿Para qué se utiliza?
+Swagger es una serie de reglas, especificaciones y herramientas que nos ayudan a documentar nuestras APIs
+--c) Descarga el proyecto del API que se encuentra en Github. En el foro se indicará la dirección de Github.
 c) Ejecuta el endpoint GET /products/all. ¿Qué devuelve y en qué formato?
-
-d) Prueba hacer una inserción a la tabla de productos, ejecutando el endpoint POST /product/add
-
-e) Crea el endpoint /clients/all que muestre todos los clientes. Deberás tomar como referencia el endpoint GET /products/all.
-Para ello deberás:
-
-e.1) Crear el archivo ClientDto.java en la carpeta dto. 
-e.2) Modificar el archivo StoreDao.java para incluir el nuevo query getClients(). Deberás mapear ClienteDto de manera similar a:
-```
-@RegisterBeanMapper(ProductDto.class)
-@SqlQuery("SELECT * FROM productos")
-List<ProductDto> getProducts();
-```
-
-
-e.2.1) ¿Para qué sirve la directiva @RegisterBeanMapper (https://jdbi.org/#_beanmapper)? 
-
-
-e.2.2) ¿Qué deberá devolver el método getClients?
-
-
-e.3) Deberás modificar el archivo StoreDal.java y crear el método getClients() de manera similar a:
-```
-public ResponseDto<List<ProductDto>> getProducts() {
-
-        ResponseDto responseDto = new ResponseDto<List<ProductDto>>();
-        responseDto.setSuccess(true);
-        Jdbi jdbi = jdbiService.getInstance();
-        var products = jdbi.withExtension(StoreDao.class, dao -> dao.getProducts());
-        responseDto.setData(products);
-        return responseDto;
-    }
-```
-
-e.4) Deberás crear el archivo ClientsResource.java en la carpeta src/main/java/resources junto a ProductsResources.java
-El archivo ClientsResource.java deberá contener un método getClients() similar a:
-```
-    @GET
-    @Path("/all")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Get all products")
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
-    })
-    public Response getProducts() {
-
-        var responseDto = storeDal.getProducts();
-        return Response.ok(responseDto).build();
-    }
-```
-Nota, el path 
-```
-@Path("/products")
-```
-deberá ser modificado a clients en el archivo ClientsResource.java
-
-
-e.5) Compila el proyecto con el comando 
-```
-./mvnw.cmd clean compile
-```
-e.6) Y ejecútalo
-```
-./mvnw.cmd quarkus:dev
-```
-e.7) Navega a http://localhost:8090/docs y verifica que se muestra el nuevo endpoint. 
+Nos devuelve los productos que tenemos en la base de datos y el formato es en JSON
  
+ 
+d) Prueba hacer una inserción a la tabla de productos, ejecutando el endpoint POST /product/add
+ 
+ 
+--d) Completa los endpoints que hacen falta.
+e.2.1) ¿Para qué sirve la directiva @RegisterBeanMapper (https://jdbi.org/#_beanmapper)?
+Ayuda a reducir el acoplamiento entre la presentación (es decir, el esquema XML) y la lógica comercial
+e.2.2) ¿Qué deberá devolver el método getClients?
+Los clientes que tenemos en la base de datos que creamos
+--e) Ejecuta el proyecto.
+ 
+ 
+--e) Crea un repositorio en Github y sube tus cambios.
+--f) En un documento en PDF, anexa las capturas de pantalla del proyecto y la liga a tu repositorio. 
 
+Bibliografía
+(s.f.). Obtenido de https://www.redhat.com/es/topics/api/what-are-application-programming-interfaces
+(s.f.). Obtenido de https://www.redhat.com/es/topics/microservices
+UNAM. (2017). Bases de datos. Ciudad de México: UNAM.
