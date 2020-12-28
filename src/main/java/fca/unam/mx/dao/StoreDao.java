@@ -2,6 +2,7 @@ package fca.unam.mx.dao;
 
 
 import fca.unam.mx.dto.ProductDto;
+import fca.unam.mx.dto.ClientDto;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -17,7 +18,7 @@ public interface StoreDao {
 	
 	@RegisterBeanMapper(ClientDto.class)
     @SqlQuery("SELECT * FROM clientes")
-    List<ClientDto> getClients();
+    List<ClientDto> getClient();
 
     @SqlUpdate("INSERT INTO productos (nombre, descripcion, precio, cantidad, sku) VALUES(:p.name, :p.description, :p.price, :p.quantity, :p.sku)")
     void addProduct(@BindBean("p") ProductDto productDto);
