@@ -22,10 +22,13 @@ d) Prueba hacer una inserción a la tabla de productos, ejecutando el endpoint P
 ![Imagen3](./images/Imagen3.png "Imagen3") 
  
 --d) Completa los endpoints que hacen falta.
+
 e.2.1) ¿Para qué sirve la directiva @RegisterBeanMapper (https://jdbi.org/#_beanmapper)?
 Ayuda a reducir el acoplamiento entre la presentación (es decir, el esquema XML) y la lógica comercial
+
 e.2.2) ¿Qué deberá devolver el método getClients?
 Los clientes que tenemos en la base de datos que creamos
+
 --e) Ejecuta el proyecto.
  
 ![Imagen4](./images/Imagen4.png "Imagen4") 
